@@ -1,8 +1,8 @@
 import { css } from '@emotion/react';
 import { Text, Spacing, Select } from '_tosslib/components';
 import { colors } from '_tosslib/constants/colors';
-import { DatePicker } from 'components/DatePicker';
-import { Chip } from 'components/Chip';
+import { DatePicker } from 'components/common/DatePicker';
+import { Chip } from 'components/common/Chip';
 import { formatDate } from 'utils/format';
 import { ALL_EQUIPMENT, EQUIPMENT_LABELS, TIME_SLOTS } from 'constants/room';
 import { Filters } from 'hooks/useBookingFilters';

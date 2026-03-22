@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Top, Spacing, Border, Button, Text } from '_tosslib/components';
 import { colors } from '_tosslib/constants/colors';
-import { DatePicker } from 'components/DatePicker';
+import { DatePicker } from 'components/common/DatePicker';
 import { Timeline } from 'components/Timeline';
 import { MyReservations } from 'components/MyReservations';
 import { useGetRooms } from 'hooks/apis/rooms';
