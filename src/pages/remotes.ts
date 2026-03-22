@@ -1,5 +1,5 @@
 import { Reservation, Room } from '_tosslib/server/types';
-import { http } from 'pages/http';
+import { http } from 'utils/http';
 
 export function getRooms() {
   return http.get<Room[]>('/api/rooms');
