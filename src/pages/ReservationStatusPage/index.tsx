@@ -1,13 +1,14 @@
 import { css } from '@emotion/react';
 import { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Top, Spacing, Border, Button, Text } from '_tosslib/components';
 import { colors } from '_tosslib/constants/colors';
-import { getRooms, getReservations, getMyReservations, cancelReservation } from 'pages/remotes';
 import { DatePicker } from 'components/DatePicker';
 import { Timeline } from 'components/Timeline';
 import { MyReservations } from 'components/MyReservations';
+import { useGetRooms } from 'hooks/apis/rooms';
+import { useGetReservations } from 'hooks/apis/reservations';
+import { useGetMyReservations, useCancelReservation } from 'hooks/apis/myReservations';
 
 const TIME_SLOTS: string[] = [];
 for (let h = 9; h <= 20; h++) {
@@ -17,11 +18,6 @@ for (let h = 9; h <= 20; h++) {
   }
 }
 
-const HOUR_LABELS = TIME_SLOTS.filter(t => t.endsWith(':00'));
-const TIMELINE_START = 9;
-const TIMELINE_END = 20;
-const TOTAL_MINUTES = (TIMELINE_END - TIMELINE_START) * 60;
-
 function formatDate(date: Date): string {
   const y = date.getFullYear();
   const m = String(date.getMonth() + 1).padStart(2, '0');
@@ -29,15 +25,9 @@ function formatDate(date: Date): string {
   return `${y}-${m}-${d}`;
 }
 
-function timeToMinutes(time: string): number {
-  const [h, m] = time.split(':').map(Number);
-  return (h - TIMELINE_START) * 60 + m;
-}
-
 export function ReservationStatusPage() {
   const navigate = useNavigate();
   const location = useLocation();
-  const queryClient = useQueryClient();
   const [date, setDate] = useState(formatDate(new Date()));
 
   const locationState = location.state as { message?: string } | null;
@@ -51,18 +41,11 @@ export function ReservationStatusPage() {
     }
   }, [locationState]);
 
-  const { data: rooms = [] } = useQuery(['rooms'], getRooms);
-  const { data: reservations = [] } = useQuery(['reservations', date], () => getReservations(date), {
-    enabled: !!date,
-  });
-  const { data: myReservationList = [] } = useQuery(['myReservations'], getMyReservations);
+  const { data: rooms = [] } = useGetRooms();
+  const { data: reservations = [] } = useGetReservations(date);
+  const { data: myReservationList = [] } = useGetMyReservations();
 
-  const cancelMutation = useMutation((id: string) => cancelReservation(id), {
-    onSuccess: () => {
-      queryClient.invalidateQueries(['reservations']);
-      queryClient.invalidateQueries(['myReservations']);
-    },
-  });
+  const cancelMutation = useCancelReservation();
 
   const handleCancel = async (id: string) => {
     try {
@@ -163,11 +146,7 @@ export function ReservationStatusPage() {
       )}
 
       {/* 내 예약 목록 */}
-      <MyReservations
-        reservations={myReservationList}
-        getRoomName={getRoomName}
-        onCancel={handleCancel}
-      />
+      <MyReservations reservations={myReservationList} getRoomName={getRoomName} onCancel={handleCancel} />
 
       <Spacing size={24} />
       <Border size={8} />
