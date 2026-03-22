@@ -1,15 +1,8 @@
 import { css } from '@emotion/react';
 import { Spacing, Button, Text, ListRow } from '_tosslib/components';
 import { colors } from '_tosslib/constants/colors';
-
-const EQUIPMENT_LABELS: Record<string, string> = {
-  tv: 'TV',
-  whiteboard: '화이트보드',
-  video: '화상장비',
-  speaker: '스피커',
-};
-
-type Room = { id: string; name: string; floor: number; capacity: number; equipment: string[] };
+import { Room } from '_tosslib/server/types';
+import { EQUIPMENT_LABELS } from 'constants/room';
 
 interface AvailableRoomListProps {
   availableRooms: Room[];
@@ -19,7 +12,13 @@ interface AvailableRoomListProps {
   isBooking: boolean;
 }
 
-export function AvailableRoomList({ availableRooms, selectedRoomId, onSelectRoom, onBook, isBooking }: AvailableRoomListProps) {
+export function AvailableRoomList({
+  availableRooms,
+  selectedRoomId,
+  onSelectRoom,
+  onBook,
+  isBooking,
+}: AvailableRoomListProps) {
   return (
     <div
       css={css`
