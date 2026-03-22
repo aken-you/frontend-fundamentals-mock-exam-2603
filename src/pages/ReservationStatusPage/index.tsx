@@ -10,6 +10,7 @@ import { useGetRooms } from 'hooks/apis/rooms';
 import { useGetReservations } from 'hooks/apis/reservations';
 import { useGetMyReservations, useCancelReservation } from 'hooks/apis/myReservations';
 import { useMessage } from 'hooks/useMessage';
+import { formatDate } from 'utils/format';
 
 const TIME_SLOTS: string[] = [];
 for (let h = 9; h <= 20; h++) {
@@ -17,13 +18,6 @@ for (let h = 9; h <= 20; h++) {
   if (h < 20) {
     TIME_SLOTS.push(`${String(h).padStart(2, '0')}:30`);
   }
-}
-
-function formatDate(date: Date): string {
-  const y = date.getFullYear();
-  const m = String(date.getMonth() + 1).padStart(2, '0');
-  const d = String(date.getDate()).padStart(2, '0');
-  return `${y}-${m}-${d}`;
 }
 
 export function ReservationStatusPage() {
