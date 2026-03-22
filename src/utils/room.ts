@@ -17,17 +17,25 @@ export function filterAvailableRooms({
 }) {
   return rooms
     .filter((room: { id: string; capacity: number; equipment: string[]; floor: number }) => {
-      if (room.capacity < attendees) return false;
-      if (!equipment.every(eq => room.equipment.includes(eq))) return false;
+      const isEnoughCapacity = room.capacity >= attendees;
+      if (!isEnoughCapacity) return false;
+
+      const hasRequiredEquipment = equipment.every(eq => room.equipment.includes(eq));
+      if (!hasRequiredEquipment) return false;
+
       if (preferredFloor !== null && room.floor !== preferredFloor) return false;
-      const hasConflict = reservations.some(
-        (r: { roomId: string; date: string; start: string; end: string }) =>
-          r.roomId === room.id && r.date === date && r.start < endTime && r.end > startTime
-      );
+
+      const hasConflict = reservations.some((r: { roomId: string; date: string; start: string; end: string }) => {
+        const isSame = r.roomId === room.id && r.date === date;
+        const isTimeConflict = r.start < endTime && r.end > startTime;
+
+        return isSame && isTimeConflict;
+      });
       if (hasConflict) return false;
+
       return true;
     })
-    .sort((a: { floor: number; name: string }, b: { floor: number; name: string }) => {
+    .sort((a, b) => {
       if (a.floor !== b.floor) return a.floor - b.floor;
       return a.name.localeCompare(b.name);
     });
