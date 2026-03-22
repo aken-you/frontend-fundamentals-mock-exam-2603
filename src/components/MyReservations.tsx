@@ -1,25 +1,10 @@
 import { css } from '@emotion/react';
 import { Spacing, Button, Text, ListRow } from '_tosslib/components';
 import { colors } from '_tosslib/constants/colors';
+import { Reservation } from '_tosslib/server/types';
+import { EQUIPMENT_LABELS } from 'constants/room';
 import { useCancelReservation } from 'hooks/apis/myReservations';
 import { MessageState } from 'hooks/useMessage';
-
-const EQUIPMENT_LABELS: Record<string, string> = {
-  tv: 'TV',
-  whiteboard: '화이트보드',
-  video: '화상장비',
-  speaker: '스피커',
-};
-
-interface Reservation {
-  id: string;
-  roomId: string;
-  date: string;
-  start: string;
-  end: string;
-  attendees: number;
-  equipment: string[];
-}
 
 interface MyReservationsProps {
   reservations: Reservation[];
