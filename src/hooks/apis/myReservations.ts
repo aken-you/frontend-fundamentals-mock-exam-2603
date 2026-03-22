@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { getMyReservations, cancelReservation } from 'pages/remotes';
+import { getMyReservations, cancelReservation, createReservation } from 'pages/remotes';
 import { reservationsKeys } from './reservations';
 
 export const myReservationsKeys = {
@@ -8,6 +8,20 @@ export const myReservationsKeys = {
 
 export const useGetMyReservations = () => {
   return useQuery(myReservationsKeys.all, getMyReservations);
+};
+
+export const useCreateReservation = () => {
+  const queryClient = useQueryClient();
+  return useMutation(
+    (data: { roomId: string; date: string; start: string; end: string; attendees: number; equipment: string[] }) =>
+      createReservation(data),
+    {
+      onSuccess: (_data, variables) => {
+        queryClient.invalidateQueries(['reservations', variables.date]);
+        queryClient.invalidateQueries(['myReservations']);
+      },
+    }
+  );
 };
 
 export const useCancelReservation = () => {
