@@ -8,6 +8,7 @@ import { useGetRooms } from 'hooks/apis/rooms';
 import { useGetReservations } from 'hooks/apis/reservations';
 import { useCreateReservation } from 'hooks/apis/myReservations';
 import { DatePicker } from 'components/DatePicker';
+import { Chip } from 'components/Chip';
 
 const EQUIPMENT_LABELS: Record<string, string> = {
   tv: 'TV',
@@ -404,33 +405,17 @@ export function RoomBookingPage() {
             {ALL_EQUIPMENT.map(eq => {
               const selected = equipment.includes(eq);
               return (
-                <button
+                <Chip
                   key={eq}
-                  type="button"
+                  label={EQUIPMENT_LABELS[eq]}
+                  selected={selected}
                   onClick={() => {
                     const next = selected ? equipment.filter(e => e !== eq) : [...equipment, eq];
                     setEquipment(next);
                     handleFilterChange();
                   }}
-                  aria-label={EQUIPMENT_LABELS[eq]}
-                  aria-pressed={selected}
-                  css={css`
-                    padding: 8px 16px;
-                    border-radius: 20px;
-                    border: 1px solid ${selected ? colors.blue500 : colors.grey200};
-                    background: ${selected ? colors.blue50 : colors.grey50};
-                    color: ${selected ? colors.blue600 : colors.grey700};
-                    font-size: 14px;
-                    font-weight: 500;
-                    cursor: pointer;
-                    transition: all 0.15s;
-                    &:hover {
-                      border-color: ${selected ? colors.blue500 : colors.grey400};
-                    }
-                  `}
-                >
-                  {EQUIPMENT_LABELS[eq]}
-                </button>
+                  ariaLabel={EQUIPMENT_LABELS[eq]}
+                />
               );
             })}
           </div>
