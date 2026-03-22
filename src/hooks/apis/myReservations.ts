@@ -17,8 +17,10 @@ export const useCreateReservation = () => {
       createReservation(data),
     {
       onSuccess: (_data, variables) => {
-        queryClient.invalidateQueries(['reservations', variables.date]);
-        queryClient.invalidateQueries(['myReservations']);
+        queryClient.invalidateQueries({
+          queryKey: reservationsKeys.filteredByDate(variables.date),
+        });
+        queryClient.invalidateQueries({ queryKey: myReservationsKeys.all });
       },
     }
   );
