@@ -9,6 +9,7 @@ import { MyReservations } from 'components/MyReservations';
 import { useGetRooms } from 'hooks/apis/rooms';
 import { useGetReservations } from 'hooks/apis/reservations';
 import { useGetMyReservations, useCancelReservation } from 'hooks/apis/myReservations';
+import { useMessage } from 'hooks/useMessage';
 
 const TIME_SLOTS: string[] = [];
 for (let h = 9; h <= 20; h++) {
@@ -28,12 +29,10 @@ function formatDate(date: Date): string {
 export function ReservationStatusPage() {
   const navigate = useNavigate();
   const location = useLocation();
-  const [date, setDate] = useState(formatDate(new Date()));
-
   const locationState = location.state as { message?: string } | null;
-  const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(
-    locationState?.message ? { type: 'success', text: locationState.message } : null
-  );
+
+  const initMessage = locationState?.message ? { type: 'success' as const, text: locationState.message } : null;
+  const { message, setMessage, MessageBanner } = useMessage({ initMessage });
 
   useEffect(() => {
     if (locationState?.message) {
@@ -41,6 +40,7 @@ export function ReservationStatusPage() {
     }
   }, [locationState]);
 
+  const [date, setDate] = useState(formatDate(new Date()));
   const { data: rooms = [] } = useGetRooms();
   const { data: reservations = [] } = useGetReservations(date);
   const { data: myReservationList = [] } = useGetMyReservations();
@@ -123,24 +123,7 @@ export function ReservationStatusPage() {
             padding: 0 24px;
           `}
         >
-          <div
-            css={css`
-              padding: 10px 14px;
-              border-radius: 10px;
-              background: ${message.type === 'success' ? colors.blue50 : colors.red50};
-              display: flex;
-              align-items: center;
-              gap: 8px;
-            `}
-          >
-            <Text
-              typography="t7"
-              fontWeight="medium"
-              color={message.type === 'success' ? colors.blue600 : colors.red500}
-            >
-              {message.text}
-            </Text>
-          </div>
+          <MessageBanner type={message.type}>{message.text}</MessageBanner>
           <Spacing size={12} />
         </div>
       )}
