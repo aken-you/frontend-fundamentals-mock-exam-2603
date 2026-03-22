@@ -8,17 +8,9 @@ import { Timeline } from 'components/Timeline';
 import { MyReservations } from 'components/MyReservations';
 import { useGetRooms } from 'hooks/apis/rooms';
 import { useGetReservations } from 'hooks/apis/reservations';
-import { useGetMyReservations, useCancelReservation } from 'hooks/apis/myReservations';
+import { useGetMyReservations } from 'hooks/apis/myReservations';
 import { useMessage } from 'hooks/useMessage';
 import { formatDate } from 'utils/format';
-
-const TIME_SLOTS: string[] = [];
-for (let h = 9; h <= 20; h++) {
-  TIME_SLOTS.push(`${String(h).padStart(2, '0')}:00`);
-  if (h < 20) {
-    TIME_SLOTS.push(`${String(h).padStart(2, '0')}:30`);
-  }
-}
 
 export function ReservationStatusPage() {
   const navigate = useNavigate();
