@@ -45,17 +45,6 @@ export function ReservationStatusPage() {
   const { data: reservations = [] } = useGetReservations(date);
   const { data: myReservationList = [] } = useGetMyReservations();
 
-  const cancelMutation = useCancelReservation();
-
-  const handleCancel = async (id: string) => {
-    try {
-      await cancelMutation.mutateAsync(id);
-      setMessage({ type: 'success', text: '예약이 취소되었습니다.' });
-    } catch {
-      setMessage({ type: 'error', text: '취소에 실패했습니다.' });
-    }
-  };
-
   const [activeReservation, setActiveReservation] = useState<string | null>(null);
 
   const getRoomName = (roomId: string) =>
@@ -129,7 +118,7 @@ export function ReservationStatusPage() {
       )}
 
       {/* 내 예약 목록 */}
-      <MyReservations reservations={myReservationList} getRoomName={getRoomName} onCancel={handleCancel} />
+      <MyReservations reservations={myReservationList} getRoomName={getRoomName} onChangeMessage={setMessage} />
 
       <Spacing size={24} />
       <Border size={8} />

@@ -3,13 +3,13 @@ import { useState, ReactNode } from 'react';
 import { Text } from '_tosslib/components';
 import { colors } from '_tosslib/constants/colors';
 
-type Message = {
+export type MessageState = {
   type: 'success' | 'error';
   text: string;
 };
 
 type UseMessageProps = {
-  initMessage?: Message | null;
+  initMessage?: MessageState | null;
 };
 
 type MessageBannerProps = {
@@ -18,7 +18,7 @@ type MessageBannerProps = {
 };
 
 export function useMessage({ initMessage }: UseMessageProps = {}) {
-  const [message, setMessage] = useState<Message | null>(initMessage ?? null);
+  const [message, setMessage] = useState<MessageState | null>(initMessage ?? null);
 
   const MessageBanner = ({ type, children }: MessageBannerProps) => (
     <div

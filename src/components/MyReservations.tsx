@@ -1,6 +1,8 @@
 import { css } from '@emotion/react';
 import { Spacing, Button, Text, ListRow } from '_tosslib/components';
 import { colors } from '_tosslib/constants/colors';
+import { useCancelReservation } from 'hooks/apis/myReservations';
+import { MessageState } from 'hooks/useMessage';
 
 const EQUIPMENT_LABELS: Record<string, string> = {
   tv: 'TV',
@@ -22,10 +24,21 @@ interface Reservation {
 interface MyReservationsProps {
   reservations: Reservation[];
   getRoomName: (roomId: string) => string;
-  onCancel: (id: string) => void;
+  onChangeMessage: (message: MessageState | null) => void;
 }
 
-export function MyReservations({ reservations, getRoomName, onCancel }: MyReservationsProps) {
+export function MyReservations({ reservations, getRoomName, onChangeMessage }: MyReservationsProps) {
+  const cancelMutation = useCancelReservation();
+
+  const handleCancel = async (id: string) => {
+    try {
+      await cancelMutation.mutateAsync(id);
+      onChangeMessage({ type: 'success', text: '예약이 취소되었습니다.' });
+    } catch {
+      onChangeMessage({ type: 'error', text: '취소에 실패했습니다.' });
+    }
+  };
+
   return (
     <div
       css={css`
@@ -100,7 +113,7 @@ export function MyReservations({ reservations, getRoomName, onCancel }: MyReserv
                     onClick={e => {
                       e.stopPropagation();
                       if (window.confirm('정말 취소하시겠습니까?')) {
-                        onCancel(res.id);
+                        handleCancel(res.id);
                       }
                     }}
                   >
