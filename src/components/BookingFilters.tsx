@@ -4,23 +4,13 @@ import { colors } from '_tosslib/constants/colors';
 import { DatePicker } from 'components/DatePicker';
 import { Chip } from 'components/Chip';
 import { formatDate } from 'utils/format';
-import { ALL_EQUIPMENT, EQUIPMENT_LABELS } from 'constants/room';
+import { ALL_EQUIPMENT, EQUIPMENT_LABELS, TIME_SLOTS } from 'constants/room';
 import { Filters } from 'hooks/useBookingFilters';
 
 interface BookingFiltersProps {
   filters: Filters;
   onChangeFilters: (nextFilters: Filters) => void;
   floors: number[];
-}
-
-const TIME_SLOTS: string[] = [];
-const START_HOUR = 9;
-const END_HOUR = 20;
-for (let h = START_HOUR; h <= END_HOUR; h++) {
-  TIME_SLOTS.push(`${String(h).padStart(2, '0')}:00`);
-  if (h < END_HOUR) {
-    TIME_SLOTS.push(`${String(h).padStart(2, '0')}:30`);
-  }
 }
 
 export function BookingFilters({ filters, onChangeFilters, floors }: BookingFiltersProps) {
