@@ -11,6 +11,7 @@ import { BookingFilters } from 'components/BookingFilters';
 import { AvailableRoomList } from 'components/AvailableRoomList';
 import { useBookingFilters } from 'hooks/useBookingFilters';
 import { filterAvailableRooms } from 'utils/room';
+import { useMessage } from 'hooks/useMessage';
 
 export function RoomBookingPage() {
   const navigate = useNavigate();
@@ -18,7 +19,8 @@ export function RoomBookingPage() {
   const { filters, setFilters, validationError, isFilterComplete } = useBookingFilters();
 
   const [selectedRoomId, setSelectedRoomId] = useState<string | null>(null);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  const { message, setMessage, MessageBanner } = useMessage();
 
   const { data: rooms = [] } = useGetRooms();
   const { data: reservations = [] } = useGetReservations(filters.date);
@@ -38,11 +40,19 @@ export function RoomBookingPage() {
 
   const handleBook = async () => {
     if (!selectedRoomId) {
-      setErrorMessage('회의실을 선택해주세요.');
+      setMessage({
+        type: 'error',
+        text: '회의실을 선택해주세요.',
+      });
+
       return;
     }
     if (!filters.startTime || !filters.endTime) {
-      setErrorMessage('시작 시간과 종료 시간을 선택해주세요.');
+      setMessage({
+        type: 'error',
+        text: '시작 시간과 종료 시간을 선택해주세요.',
+      });
+
       return;
     }
 
@@ -62,7 +72,11 @@ export function RoomBookingPage() {
       }
 
       const errResult = result as { message?: string };
-      setErrorMessage(errResult.message ?? '예약에 실패했습니다.');
+      setMessage({
+        type: 'error',
+        text: errResult.message ?? '예약에 실패했습니다.',
+      });
+
       setSelectedRoomId(null);
     } catch (err: unknown) {
       let serverMessage = '예약에 실패했습니다.';
@@ -70,7 +84,12 @@ export function RoomBookingPage() {
         const data = err.response?.data as { message?: string } | undefined;
         serverMessage = data?.message ?? serverMessage;
       }
-      setErrorMessage(serverMessage);
+
+      setMessage({
+        type: 'error',
+        text: serverMessage,
+      });
+
       setSelectedRoomId(null);
     }
   };
@@ -115,27 +134,14 @@ export function RoomBookingPage() {
         예약하기
       </Top.Top03>
 
-      {errorMessage && (
+      {message?.type === 'error' && message?.text !== '' && (
         <div
           css={css`
             padding: 0 24px;
           `}
         >
           <Spacing size={12} />
-          <div
-            css={css`
-              padding: 10px 14px;
-              border-radius: 10px;
-              background: ${colors.red50};
-              display: flex;
-              align-items: center;
-              gap: 8px;
-            `}
-          >
-            <Text typography="t7" fontWeight="medium" color={colors.red500}>
-              {errorMessage}
-            </Text>
-          </div>
+          <MessageBanner type="error">{message.text}</MessageBanner>
         </div>
       )}
 
@@ -147,7 +153,10 @@ export function RoomBookingPage() {
         onChangeFilters={nextFilters => {
           setFilters(nextFilters);
           setSelectedRoomId(null);
-          setErrorMessage(null);
+          setMessage({
+            type: 'success',
+            text: '',
+          });
         }}
         floors={floors}
       />
