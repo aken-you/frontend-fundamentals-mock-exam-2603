@@ -6,3 +6,5 @@ export const EQUIPMENT_LABELS: Record<string, string> = {
 };
 
 export const ALL_EQUIPMENT = ['tv', 'whiteboard', 'video', 'speaker'] as const;
+
+export const MIN_ATTENDEES = 1;
