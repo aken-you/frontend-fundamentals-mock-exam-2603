@@ -95,7 +95,7 @@ export function RoomBookingPage() {
   };
 
   return (
-    <div
+    <section
       css={css`
         background: ${colors.white};
         padding-bottom: 40px;
@@ -149,8 +149,8 @@ export function RoomBookingPage() {
 
       {/* 예약 조건 입력 */}
       <BookingFilters
-        filters={filters}
-        onChangeFilters={nextFilters => {
+        value={filters}
+        onChange={nextFilters => {
           setFilters(nextFilters);
           setSelectedRoomId(null);
           setMessage({
@@ -196,6 +196,6 @@ export function RoomBookingPage() {
       )}
 
       <Spacing size={24} />
-    </div>
+    </section>
   );
 }

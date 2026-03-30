@@ -25,7 +25,7 @@ export function MyReservations({ reservations, getRoomName, onChangeMessage }: M
   };
 
   return (
-    <div
+    <section
       css={css`
         padding: 0 24px;
       `}
@@ -62,7 +62,7 @@ export function MyReservations({ reservations, getRoomName, onChangeMessage }: M
           </Text>
         </div>
       ) : (
-        <div
+        <ul
           css={css`
             display: flex;
             flex-direction: column;
@@ -108,8 +108,8 @@ export function MyReservations({ reservations, getRoomName, onChangeMessage }: M
               />
             </div>
           ))}
-        </div>
+        </ul>
       )}
-    </div>
+    </section>
   );
 }

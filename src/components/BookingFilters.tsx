@@ -8,14 +8,14 @@ import { ALL_EQUIPMENT, EQUIPMENT_LABELS, TIME_SLOTS } from 'constants/room';
 import { Filters } from 'hooks/useBookingFilters';
 
 interface BookingFiltersProps {
-  filters: Filters;
-  onChangeFilters: (nextFilters: Filters) => void;
+  value: Filters;
+  onChange: (nextValue: Filters) => void;
   floors: number[];
 }
 
-export function BookingFilters({ filters, onChangeFilters, floors }: BookingFiltersProps) {
+export function BookingFilters({ value, onChange, floors }: BookingFiltersProps) {
   return (
-    <div
+    <section
       css={css`
         padding: 0 24px;
       `}
@@ -33,14 +33,16 @@ export function BookingFilters({ filters, onChangeFilters, floors }: BookingFilt
           gap: 6px;
         `}
       >
-        <Text as="label" typography="t7" fontWeight="medium" color={colors.grey600}>
+        <Text as="label" htmlFor="date" typography="t7" fontWeight="medium" color={colors.grey600}>
           날짜
         </Text>
         <DatePicker
-          value={filters.date}
+          id="date"
+          name="date"
+          value={value.date}
           min={formatDate(new Date())}
-          onChange={value => {
-            onChangeFilters({ ...filters, date: value });
+          onChange={nextValue => {
+            onChange({ ...value, date: nextValue });
           }}
         />
       </div>
@@ -61,13 +63,15 @@ export function BookingFilters({ filters, onChangeFilters, floors }: BookingFilt
             flex: 1;
           `}
         >
-          <Text as="label" typography="t7" fontWeight="medium" color={colors.grey600}>
+          <Text as="label" htmlFor="start-time" typography="t7" fontWeight="medium" color={colors.grey600}>
             시작 시간
           </Text>
           <Select
-            value={filters.startTime}
+            id="start-time"
+            name="start-time"
+            value={value.startTime}
             onChange={e => {
-              onChangeFilters({ ...filters, startTime: e.target.value });
+              onChange({ ...value, startTime: e.target.value });
             }}
             aria-label="시작 시간"
           >
@@ -87,13 +91,15 @@ export function BookingFilters({ filters, onChangeFilters, floors }: BookingFilt
             flex: 1;
           `}
         >
-          <Text as="label" typography="t7" fontWeight="medium" color={colors.grey600}>
+          <Text as="label" htmlFor="end-time" typography="t7" fontWeight="medium" color={colors.grey600}>
             종료 시간
           </Text>
           <Select
-            value={filters.endTime}
+            id="end-time"
+            name="end-time"
+            value={value.endTime}
             onChange={e => {
-              onChangeFilters({ ...filters, endTime: e.target.value });
+              onChange({ ...value, endTime: e.target.value });
             }}
             aria-label="종료 시간"
           >
@@ -123,15 +129,17 @@ export function BookingFilters({ filters, onChangeFilters, floors }: BookingFilt
             flex: 1;
           `}
         >
-          <Text as="label" typography="t7" fontWeight="medium" color={colors.grey600}>
+          <Text as="label" htmlFor="attendees" typography="t7" fontWeight="medium" color={colors.grey600}>
             참석 인원
           </Text>
           <input
             type="number"
             min={1}
-            value={filters.attendees}
+            id="attendees"
+            name="attendees"
+            value={value.attendees}
             onChange={e => {
-              onChangeFilters({ ...filters, attendees: Math.max(1, Number(e.target.value)) });
+              onChange({ ...value, attendees: Math.max(1, Number(e.target.value)) });
             }}
             aria-label="참석 인원"
             css={css`
@@ -162,14 +170,16 @@ export function BookingFilters({ filters, onChangeFilters, floors }: BookingFilt
             flex: 1;
           `}
         >
-          <Text as="label" typography="t7" fontWeight="medium" color={colors.grey600}>
+          <Text as="label" htmlFor="floor" typography="t7" fontWeight="medium" color={colors.grey600}>
             선호 층
           </Text>
           <Select
-            value={filters.preferredFloor ?? ''}
+            id="floor"
+            name="floor"
+            value={value.preferredFloor ?? ''}
             onChange={e => {
               const val = e.target.value;
-              onChangeFilters({ ...filters, preferredFloor: val === '' ? null : Number(val) });
+              onChange({ ...value, preferredFloor: val === '' ? null : Number(val) });
             }}
             aria-label="선호 층"
           >
@@ -198,15 +208,15 @@ export function BookingFilters({ filters, onChangeFilters, floors }: BookingFilt
           `}
         >
           {ALL_EQUIPMENT.map(eq => {
-            const selected = filters.equipment.includes(eq);
+            const selected = value.equipment.includes(eq);
             return (
               <Chip
                 key={eq}
                 label={EQUIPMENT_LABELS[eq]}
                 selected={selected}
                 onClick={() => {
-                  const next = selected ? filters.equipment.filter(e => e !== eq) : [...filters.equipment, eq];
-                  onChangeFilters({ ...filters, equipment: next });
+                  const next = selected ? value.equipment.filter(e => e !== eq) : [...value.equipment, eq];
+                  onChange({ ...value, equipment: next });
                 }}
                 ariaLabel={EQUIPMENT_LABELS[eq]}
               />
@@ -214,6 +224,6 @@ export function BookingFilters({ filters, onChangeFilters, floors }: BookingFilt
           })}
         </div>
       </div>
-    </div>
+    </section>
   );
 }

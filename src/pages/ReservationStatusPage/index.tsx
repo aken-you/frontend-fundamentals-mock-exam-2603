@@ -37,7 +37,7 @@ export function ReservationStatusPage() {
     rooms.find((r: { id: string; name: string }) => r.id === roomId)?.name ?? roomId;
 
   return (
-    <div
+    <section
       css={css`
         background: ${colors.white};
         padding-bottom: 40px;
@@ -55,12 +55,12 @@ export function ReservationStatusPage() {
       <Spacing size={24} />
 
       {/* 날짜 선택 */}
-      <div
+      <section
         css={css`
           padding: 0 24px;
         `}
       >
-        <Text typography="t5" fontWeight="bold" color={colors.grey900}>
+        <Text as="label" htmlFor="date" typography="t5" fontWeight="bold" color={colors.grey900}>
           날짜 선택
         </Text>
         <Spacing size={16} />
@@ -71,21 +71,31 @@ export function ReservationStatusPage() {
             gap: 6px;
           `}
         >
-          <DatePicker value={date} onChange={setDate} min={formatDate(new Date())} />
+          <DatePicker id="date" name="date" value={date} onChange={setDate} min={formatDate(new Date())} />
         </div>
-      </div>
+      </section>
 
       <Spacing size={24} />
       <Border size={8} />
       <Spacing size={24} />
 
       {/* 예약 현황 타임라인 */}
-      <Timeline
-        rooms={rooms}
-        reservations={reservations}
-        activeReservation={activeReservation}
-        onActiveReservationChange={setActiveReservation}
-      />
+      <section
+        css={css`
+          padding: 0 24px;
+        `}
+      >
+        <Text typography="t5" fontWeight="bold" color={colors.grey900}>
+          예약 현황
+        </Text>
+        <Spacing size={16} />
+        <Timeline
+          rooms={rooms}
+          reservations={reservations}
+          activeReservation={activeReservation}
+          onActiveReservationChange={setActiveReservation}
+        />
+      </section>
 
       <Spacing size={24} />
       <Border size={8} />
@@ -93,14 +103,14 @@ export function ReservationStatusPage() {
 
       {/* 메시지 배너 */}
       {message && (
-        <div
+        <section
           css={css`
             padding: 0 24px;
           `}
         >
           <MessageBanner type={message.type}>{message.text}</MessageBanner>
           <Spacing size={12} />
-        </div>
+        </section>
       )}
 
       {/* 내 예약 목록 */}
@@ -121,6 +131,6 @@ export function ReservationStatusPage() {
         </Button>
       </div>
       <Spacing size={24} />
-    </div>
+    </section>
   );
 }

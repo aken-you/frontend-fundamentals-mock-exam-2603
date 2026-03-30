@@ -20,7 +20,7 @@ export function AvailableRoomList({
   isBooking,
 }: AvailableRoomListProps) {
   return (
-    <div
+    <section
       css={css`
         padding: 0 24px;
       `}
@@ -55,7 +55,7 @@ export function AvailableRoomList({
           </Text>
         </div>
       ) : (
-        <div
+        <ul
           css={css`
             display: flex;
             flex-direction: column;
@@ -105,13 +105,13 @@ export function AvailableRoomList({
               </div>
             );
           })}
-        </div>
+        </ul>
       )}
 
       <Spacing size={16} />
       <Button display="full" onClick={onBook} disabled={isBooking}>
         {isBooking ? '예약 중...' : '확정'}
       </Button>
-    </div>
+    </section>
   );
 }
