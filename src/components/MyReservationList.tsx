@@ -3,7 +3,7 @@ import { Spacing, Button, Text, ListRow } from '_tosslib/components';
 import { colors } from '_tosslib/constants/colors';
 import { Reservation } from '_tosslib/server/types';
 import { EQUIPMENT_LABELS } from 'constants/room';
-import { useCancelReservation } from 'hooks/apis/myReservations';
+import { useCancelReservation } from 'hooks/apis/myReservation';
 import { MessageState } from 'hooks/useMessage';
 
 interface MyReservationsProps {
@@ -12,7 +12,7 @@ interface MyReservationsProps {
   onChangeMessage: (message: MessageState | null) => void;
 }
 
-export function MyReservations({ reservations, getRoomName, onChangeMessage }: MyReservationsProps) {
+export function MyReservationList({ reservations, getRoomName, onChangeMessage }: MyReservationsProps) {
   const cancelMutation = useCancelReservation();
 
   const handleCancel = async (id: string) => {

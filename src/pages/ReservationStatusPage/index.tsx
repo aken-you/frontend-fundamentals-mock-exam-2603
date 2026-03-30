@@ -5,10 +5,10 @@ import { Top, Spacing, Border, Button, Text } from '_tosslib/components';
 import { colors } from '_tosslib/constants/colors';
 import { DatePicker } from 'components/common/DatePicker';
 import { Timeline } from 'components/Timeline';
-import { MyReservations } from 'components/MyReservations';
-import { useGetRooms } from 'hooks/apis/rooms';
-import { useGetReservations } from 'hooks/apis/reservations';
-import { useGetMyReservations } from 'hooks/apis/myReservations';
+import { MyReservationList } from 'components/MyReservationList';
+import { useGetRoomList } from 'hooks/apis/room';
+import { useGetReservationList } from 'hooks/apis/reservation';
+import { useGetMyReservationList } from 'hooks/apis/myReservation';
 import { useMessage } from 'hooks/useMessage';
 import { formatDate } from 'utils/format';
 
@@ -27,14 +27,14 @@ export function ReservationStatusPage() {
   }, [locationState]);
 
   const [date, setDate] = useState(formatDate(new Date()));
-  const { data: rooms = [] } = useGetRooms();
-  const { data: reservations = [] } = useGetReservations(date);
-  const { data: myReservationList = [] } = useGetMyReservations();
+  const { data: roomList = [] } = useGetRoomList();
+  const { data: reservationList = [] } = useGetReservationList(date);
+  const { data: myReservationList = [] } = useGetMyReservationList();
 
   const [activeReservation, setActiveReservation] = useState<string | null>(null);
 
   const getRoomName = (roomId: string) =>
-    rooms.find((r: { id: string; name: string }) => r.id === roomId)?.name ?? roomId;
+    roomList.find((r: { id: string; name: string }) => r.id === roomId)?.name ?? roomId;
 
   return (
     <section
@@ -90,8 +90,8 @@ export function ReservationStatusPage() {
         </Text>
         <Spacing size={16} />
         <Timeline
-          rooms={rooms}
-          reservations={reservations}
+          rooms={roomList}
+          reservations={reservationList}
           activeReservation={activeReservation}
           onActiveReservationChange={setActiveReservation}
         />
@@ -114,7 +114,7 @@ export function ReservationStatusPage() {
       )}
 
       {/* 내 예약 목록 */}
-      <MyReservations reservations={myReservationList} getRoomName={getRoomName} onChangeMessage={setMessage} />
+      <MyReservationList reservations={myReservationList} getRoomName={getRoomName} onChangeMessage={setMessage} />
 
       <Spacing size={24} />
       <Border size={8} />

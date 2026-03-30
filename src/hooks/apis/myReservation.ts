@@ -1,13 +1,13 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { getMyReservations, cancelReservation, createReservation } from 'pages/remotes';
-import { reservationsKeys } from './reservations';
+import { reservationKeys } from './reservation';
 
-export const myReservationsKeys = {
-  all: ['myReservations'] as const,
+export const myReservationKeys = {
+  all: ['myReservationList'] as const,
 };
 
-export const useGetMyReservations = () => {
-  return useQuery(myReservationsKeys.all, getMyReservations);
+export const useGetMyReservationList = () => {
+  return useQuery(myReservationKeys.all, getMyReservations);
 };
 
 export const useCreateReservation = () => {
@@ -18,9 +18,9 @@ export const useCreateReservation = () => {
     {
       onSuccess: (_data, variables) => {
         queryClient.invalidateQueries({
-          queryKey: reservationsKeys.filteredByDate(variables.date),
+          queryKey: reservationKeys.filteredByDate(variables.date),
         });
-        queryClient.invalidateQueries({ queryKey: myReservationsKeys.all });
+        queryClient.invalidateQueries({ queryKey: myReservationKeys.all });
       },
     }
   );
@@ -30,8 +30,8 @@ export const useCancelReservation = () => {
   const queryClient = useQueryClient();
   return useMutation((id: string) => cancelReservation(id), {
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: reservationsKeys.all });
-      queryClient.invalidateQueries({ queryKey: myReservationsKeys.all });
+      queryClient.invalidateQueries({ queryKey: reservationKeys.all });
+      queryClient.invalidateQueries({ queryKey: myReservationKeys.all });
     },
   });
 };

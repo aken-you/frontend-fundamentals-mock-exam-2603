@@ -4,13 +4,13 @@ import { useNavigate } from 'react-router-dom';
 import { Top, Spacing, Border, Text } from '_tosslib/components';
 import { colors } from '_tosslib/constants/colors';
 import axios from 'axios';
-import { useGetRooms } from 'hooks/apis/rooms';
-import { useGetReservations } from 'hooks/apis/reservations';
-import { useCreateReservation } from 'hooks/apis/myReservations';
+import { useGetRoomList } from 'hooks/apis/room';
+import { useGetReservationList } from 'hooks/apis/reservation';
+import { useCreateReservation } from 'hooks/apis/myReservation';
 import { BookingFilters } from 'components/BookingFilters';
 import { AvailableRoomList } from 'components/AvailableRoomList';
 import { useBookingFilters } from 'hooks/useBookingFilters';
-import { filterAvailableRooms } from 'utils/room';
+import { filterAvailableRoom } from 'utils/room';
 import { useMessage } from 'hooks/useMessage';
 
 export function RoomBookingPage() {
@@ -22,19 +22,19 @@ export function RoomBookingPage() {
 
   const { message, setMessage, MessageBanner } = useMessage();
 
-  const { data: rooms = [] } = useGetRooms();
-  const { data: reservations = [] } = useGetReservations(filters.date);
+  const { data: roomList = [] } = useGetRoomList();
+  const { data: reservationList = [] } = useGetReservationList(filters.date);
 
   const createMutation = useCreateReservation();
 
   // 필터링
-  const floors = [...new Set(rooms.map((r: { floor: number }) => r.floor))].sort((a: number, b: number) => a - b);
+  const floors = [...new Set(roomList.map((r: { floor: number }) => r.floor))].sort((a: number, b: number) => a - b);
 
-  const availableRooms = isFilterComplete
-    ? filterAvailableRooms({
+  const availableRoomList = isFilterComplete
+    ? filterAvailableRoom({
         filters,
-        rooms,
-        reservations,
+        roomList,
+        reservationList,
       })
     : [];
 
@@ -187,7 +187,7 @@ export function RoomBookingPage() {
       {/* 예약 가능 회의실 목록 */}
       {isFilterComplete && (
         <AvailableRoomList
-          availableRooms={availableRooms}
+          availableRooms={availableRoomList}
           selectedRoomId={selectedRoomId}
           onSelectRoom={setSelectedRoomId}
           onBook={handleBook}

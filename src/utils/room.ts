@@ -6,16 +6,16 @@ export function isEquipment(value: string): value is Equipment {
   return ALL_EQUIPMENT.includes(value as Equipment);
 }
 
-export function filterAvailableRooms({
+export function filterAvailableRoom({
   filters: { date, startTime, endTime, attendees, equipment, preferredFloor },
-  rooms,
-  reservations,
+  roomList,
+  reservationList,
 }: {
   filters: Filters;
-  rooms: Room[];
-  reservations: Reservation[];
+  roomList: Room[];
+  reservationList: Reservation[];
 }) {
-  return rooms
+  return roomList
     .filter((room: { id: string; capacity: number; equipment: string[]; floor: number }) => {
       const isEnoughCapacity = room.capacity >= attendees;
       if (!isEnoughCapacity) return false;
@@ -25,7 +25,7 @@ export function filterAvailableRooms({
 
       if (preferredFloor !== null && room.floor !== preferredFloor) return false;
 
-      const hasConflict = reservations.some((r: { roomId: string; date: string; start: string; end: string }) => {
+      const hasConflict = reservationList.some((r: { roomId: string; date: string; start: string; end: string }) => {
         const isSame = r.roomId === room.id && r.date === date;
         const isTimeConflict = r.start < endTime && r.end > startTime;
 
