@@ -1,8 +1,10 @@
 import { css } from '@emotion/react';
-import { Spacing, Text } from '_tosslib/components';
+import { useState } from 'react';
+import { Text } from '_tosslib/components';
 import { colors } from '_tosslib/constants/colors';
-import { Reservation, Room } from '_tosslib/server/types';
-import { EQUIPMENT_LABELS, HOUR_LABELS, TIME_SLOTS, TIMELINE_START, TOTAL_MINUTES } from 'constants/room';
+import { Reservation } from '_tosslib/server/types';
+import { EQUIPMENT_LABELS, HOUR_LABELS, TIMELINE_START, TOTAL_MINUTES } from 'constants/room';
+import { Tooltip } from 'components/common/Tooltip';
 
 function timeToMinutes(time: string): number {
   const [h, m] = time.split(':').map(Number);
@@ -10,13 +12,13 @@ function timeToMinutes(time: string): number {
 }
 
 interface TimelineProps {
-  rooms: Room[];
-  reservations: Reservation[];
-  activeReservation: string | null;
-  onActiveReservationChange: (id: string | null) => void;
+  rowList: { id: string; name: string }[];
+  eventList: Reservation[];
 }
 
-export function Timeline({ rooms, reservations, activeReservation, onActiveReservationChange }: TimelineProps) {
+export function Timeline({ rowList, eventList }: TimelineProps) {
+  const [activeTime, setActiveTime] = useState<string | null>(null);
+
   return (
     <div
       css={css`
@@ -70,12 +72,12 @@ export function Timeline({ rooms, reservations, activeReservation, onActiveReser
         </div>
       </div>
 
-      {/* 회의실별 타임라인 */}
-      {rooms.map((room, index) => {
-        const roomReservations = reservations.filter(r => r.roomId === room.id);
+      {rowList.map((row, index) => {
+        const targetEventList = eventList.filter(event => event.roomId === row.id);
+
         return (
           <div
-            key={room.id}
+            key={row.id}
             css={css`
               display: flex;
               align-items: center;
@@ -99,7 +101,7 @@ export function Timeline({ rooms, reservations, activeReservation, onActiveReser
                   font-size: 12px;
                 `}
               >
-                {room.name}
+                {row.name}
               </Text>
             </div>
             <div
@@ -112,10 +114,11 @@ export function Timeline({ rooms, reservations, activeReservation, onActiveReser
                 overflow: visible;
               `}
             >
-              {roomReservations.map(res => {
+              {targetEventList.map(res => {
                 const left = (timeToMinutes(res.start) / TOTAL_MINUTES) * 100;
                 const width = ((timeToMinutes(res.end) - timeToMinutes(res.start)) / TOTAL_MINUTES) * 100;
-                const isActive = activeReservation === res.id;
+                const isActive = activeTime === res.id;
+
                 return (
                   <div
                     key={res.id}
@@ -128,8 +131,11 @@ export function Timeline({ rooms, reservations, activeReservation, onActiveReser
                   >
                     <div
                       role="button"
-                      aria-label={`${room.name} ${res.start}-${res.end} 예약 상세`}
-                      onClick={() => onActiveReservationChange(isActive ? null : res.id)}
+                      aria-label={`${row.name} ${res.start}-${res.end} 예약 상세`}
+                      onClick={() => {
+                        const newActiveId = isActive ? null : res.id;
+                        setActiveTime(newActiveId);
+                      }}
                       css={css`
                         width: 100%;
                         height: 100%;
@@ -144,25 +150,7 @@ export function Timeline({ rooms, reservations, activeReservation, onActiveReser
                       `}
                     />
                     {isActive && (
-                      <div
-                        role="tooltip"
-                        css={css`
-                          position: absolute;
-                          top: 100%;
-                          left: 50%;
-                          transform: translateX(-50%);
-                          margin-top: 6px;
-                          background: ${colors.grey900};
-                          color: ${colors.white};
-                          padding: 8px 12px;
-                          border-radius: 8px;
-                          font-size: 12px;
-                          white-space: nowrap;
-                          z-index: 10;
-                          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
-                          line-height: 1.6;
-                        `}
-                      >
+                      <Tooltip>
                         <div>
                           {res.start} ~ {res.end}
                         </div>
@@ -170,7 +158,7 @@ export function Timeline({ rooms, reservations, activeReservation, onActiveReser
                         {res.equipment.length > 0 && (
                           <div>{res.equipment.map(e => EQUIPMENT_LABELS[e]).join(', ')}</div>
                         )}
-                      </div>
+                      </Tooltip>
                     )}
                   </div>
                 );

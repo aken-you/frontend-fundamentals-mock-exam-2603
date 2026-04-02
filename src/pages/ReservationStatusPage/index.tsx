@@ -30,8 +30,6 @@ export function ReservationStatusPage() {
   const { data: roomList = [] } = useGetRoomList();
   const { data: reservationList = [] } = useGetReservationList(date);
 
-  const [activeReservation, setActiveReservation] = useState<string | null>(null);
-
   return (
     <section
       css={css`
@@ -85,12 +83,7 @@ export function ReservationStatusPage() {
           예약 현황
         </Text>
         <Spacing size={16} />
-        <Timeline
-          rooms={roomList}
-          reservations={reservationList}
-          activeReservation={activeReservation}
-          onActiveReservationChange={setActiveReservation}
-        />
+        <Timeline rowList={roomList} eventList={reservationList} />
       </section>
 
       <Spacing size={24} />
