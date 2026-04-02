@@ -10,6 +10,7 @@ import { useGetRoomList } from 'hooks/apis/room';
 import { useGetReservationList } from 'hooks/apis/reservation';
 import { useMessage } from 'hooks/useMessage';
 import { formatDate } from 'utils/format';
+import { Message } from 'components/Message';
 
 export function ReservationStatusPage() {
   const navigate = useNavigate();
@@ -17,7 +18,7 @@ export function ReservationStatusPage() {
   const locationState = location.state as { message?: string } | null;
 
   const initMessage = locationState?.message ? { type: 'success' as const, text: locationState.message } : null;
-  const { message, setMessage, MessageBanner } = useMessage({ initMessage });
+  const [message, setMessage] = useMessage({ initMessage });
 
   useEffect(() => {
     if (locationState?.message) {
@@ -103,7 +104,7 @@ export function ReservationStatusPage() {
             padding: 0 24px;
           `}
         >
-          <MessageBanner type={message.type}>{message.text}</MessageBanner>
+          <Message type={message.type}>{message.text}</Message>
           <Spacing size={12} />
         </section>
       )}

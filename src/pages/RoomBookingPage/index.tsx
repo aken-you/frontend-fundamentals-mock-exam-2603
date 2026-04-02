@@ -12,6 +12,7 @@ import { AvailableRoomList } from 'components/AvailableRoomList';
 import { useBookingFilters } from 'hooks/useBookingFilters';
 import { filterAvailableRoom } from 'utils/room';
 import { useMessage } from 'hooks/useMessage';
+import { Message } from 'components/Message';
 
 export function RoomBookingPage() {
   const navigate = useNavigate();
@@ -20,7 +21,7 @@ export function RoomBookingPage() {
 
   const [selectedRoomId, setSelectedRoomId] = useState<string | null>(null);
 
-  const { message, setMessage, MessageBanner } = useMessage();
+  const [message, setMessage] = useMessage();
 
   const { data: roomList = [] } = useGetRoomList();
   const { data: reservationList = [] } = useGetReservationList(filters.date);
@@ -141,7 +142,7 @@ export function RoomBookingPage() {
           `}
         >
           <Spacing size={12} />
-          <MessageBanner type="error">{message.text}</MessageBanner>
+          <Message type="error">{message.text}</Message>
         </div>
       )}
 
