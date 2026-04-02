@@ -8,7 +8,6 @@ import { Timeline } from 'components/Timeline';
 import { MyReservationList } from 'components/MyReservationList';
 import { useGetRoomList } from 'hooks/apis/room';
 import { useGetReservationList } from 'hooks/apis/reservation';
-import { useGetMyReservationList } from 'hooks/apis/myReservation';
 import { useMessage } from 'hooks/useMessage';
 import { formatDate } from 'utils/format';
 
@@ -29,12 +28,8 @@ export function ReservationStatusPage() {
   const [date, setDate] = useState(formatDate(new Date()));
   const { data: roomList = [] } = useGetRoomList();
   const { data: reservationList = [] } = useGetReservationList(date);
-  const { data: myReservationList = [] } = useGetMyReservationList();
 
   const [activeReservation, setActiveReservation] = useState<string | null>(null);
-
-  const getRoomName = (roomId: string) =>
-    roomList.find((r: { id: string; name: string }) => r.id === roomId)?.name ?? roomId;
 
   return (
     <section
@@ -114,7 +109,7 @@ export function ReservationStatusPage() {
       )}
 
       {/* 내 예약 목록 */}
-      <MyReservationList reservations={myReservationList} getRoomName={getRoomName} onChangeMessage={setMessage} />
+      <MyReservationList onMessage={setMessage} />
 
       <Spacing size={24} />
       <Border size={8} />

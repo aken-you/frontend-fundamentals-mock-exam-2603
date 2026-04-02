@@ -6,6 +6,10 @@ export function isEquipment(value: string): value is Equipment {
   return ALL_EQUIPMENT.includes(value as Equipment);
 }
 
+export function getRoomName({ roomList, roomId }: { roomList: Room[]; roomId: string }): string {
+  return roomList.find(room => room.id === roomId)?.name ?? roomId;
+}
+
 export function filterAvailableRoom({
   filters: { date, startTime, endTime, attendees, equipment, preferredFloor },
   roomList,

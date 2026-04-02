@@ -3,24 +3,26 @@ import { Spacing, Button, Text, ListRow } from '_tosslib/components';
 import { colors } from '_tosslib/constants/colors';
 import { Reservation } from '_tosslib/server/types';
 import { EQUIPMENT_LABELS } from 'constants/room';
-import { useCancelReservation } from 'hooks/apis/myReservation';
+import { useCancelReservation, useGetMyReservationList } from 'hooks/apis/myReservation';
+import { useGetRoomList } from 'hooks/apis/room';
 import { MessageState } from 'hooks/useMessage';
+import { getRoomName } from 'utils/room';
 
 interface MyReservationsProps {
-  reservations: Reservation[];
-  getRoomName: (roomId: string) => string;
-  onChangeMessage: (message: MessageState | null) => void;
+  onMessage: (message: MessageState | null) => void;
 }
 
-export function MyReservationList({ reservations, getRoomName, onChangeMessage }: MyReservationsProps) {
+export function MyReservationList({ onMessage }: MyReservationsProps) {
+  const { data: reservations = [] } = useGetMyReservationList();
+  const { data: roomList = [] } = useGetRoomList();
   const cancelMutation = useCancelReservation();
 
   const handleCancel = async (id: string) => {
     try {
       await cancelMutation.mutateAsync(id);
-      onChangeMessage({ type: 'success', text: '예약이 취소되었습니다.' });
+      onMessage({ type: 'success', text: '예약이 취소되었습니다.' });
     } catch {
-      onChangeMessage({ type: 'error', text: '취소에 실패했습니다.' });
+      onMessage({ type: 'error', text: '취소에 실패했습니다.' });
     }
   };
 
@@ -82,7 +84,7 @@ export function MyReservationList({ reservations, getRoomName, onChangeMessage }
               <ListRow
                 contents={
                   <ListRow.Text2Rows
-                    top={getRoomName(res.roomId)}
+                    top={getRoomName({ roomList, roomId: res.roomId })}
                     topProps={{ typography: 't6', fontWeight: 'bold', color: colors.grey900 }}
                     bottom={`${res.date} ${res.start}~${res.end} · ${res.attendees}명 · ${
                       res.equipment.map(e => EQUIPMENT_LABELS[e]).join(', ') || '장비 없음'
