@@ -1,4 +1,4 @@
-import { useState, ReactNode } from 'react';
+import { useState } from 'react';
 
 export type MessageState = {
   type: 'success' | 'error';

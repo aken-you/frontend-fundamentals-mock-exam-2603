@@ -2,8 +2,8 @@ import { css } from '@emotion/react';
 import { Spacing, Button, Text, ListRow } from '_tosslib/components';
 import { colors } from '_tosslib/constants/colors';
 import { EQUIPMENT_LABELS } from 'constants/room';
-import { useCancelReservation, useGetMyReservationList } from 'hooks/apis/myReservation';
-import { useGetRoomList } from 'hooks/apis/room';
+import { useCancelReservation, useGetMyReservationList } from 'apis/myReservation';
+import { useGetRoomList } from 'apis/room';
 import { getRoomName } from 'utils/room';
 
 interface MyReservationsProps {

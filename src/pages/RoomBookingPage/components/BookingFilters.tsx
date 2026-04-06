@@ -5,7 +5,7 @@ import { DatePicker } from 'components/common/DatePicker';
 import { Chip } from 'components/common/Chip';
 import { formatDate } from 'utils/format';
 import { ALL_EQUIPMENT, EQUIPMENT_LABELS, TIME_SLOTS } from 'constants/room';
-import { Filters } from 'hooks/useBookingFilters';
+import { Filters } from 'pages/RoomBookingPage/hooks/useBookingFilters';
 
 interface BookingFiltersProps {
   value: Filters;

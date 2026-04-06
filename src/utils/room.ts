@@ -1,6 +1,6 @@
 import { Equipment, Reservation, Room } from '_tosslib/server/types';
 import { ALL_EQUIPMENT } from 'constants/room';
-import { Filters } from 'hooks/useBookingFilters';
+import { Filters } from 'pages/RoomBookingPage/hooks/useBookingFilters';
 
 export function isEquipment(value: string): value is Equipment {
   return ALL_EQUIPMENT.includes(value as Equipment);

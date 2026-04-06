@@ -1,5 +1,5 @@
 import { queryOptions, useQuery } from '@tanstack/react-query';
-import { getRooms } from 'pages/remotes';
+import { getRooms } from 'apis/remotes';
 
 const roomKeys = {
   all: () => ['room'],

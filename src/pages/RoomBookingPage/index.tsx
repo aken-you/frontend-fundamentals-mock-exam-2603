@@ -4,12 +4,12 @@ import { useNavigate } from 'react-router-dom';
 import { Top, Spacing, Border, Text } from '_tosslib/components';
 import { colors } from '_tosslib/constants/colors';
 import axios from 'axios';
-import { useGetRoomList } from 'hooks/apis/room';
-import { useGetReservationList } from 'hooks/apis/reservation';
-import { useCreateReservation } from 'hooks/apis/myReservation';
-import { BookingFilters } from 'components/BookingFilters';
-import { AvailableRoomList } from 'components/AvailableRoomList';
-import { useBookingFilters } from 'hooks/useBookingFilters';
+import { useGetRoomList } from 'apis/room';
+import { useGetReservationList } from 'apis/reservation';
+import { useCreateReservation } from 'apis/myReservation';
+import { BookingFilters } from './components/BookingFilters';
+import { AvailableRoomList } from './components/AvailableRoomList';
+import { useBookingFilters } from './hooks/useBookingFilters';
 import { filterAvailableRoom } from 'utils/room';
 import { useMessage } from 'hooks/useMessage';
 import { Message } from 'components/Message';
@@ -190,7 +190,7 @@ export function RoomBookingPage() {
         <AvailableRoomList
           availableRooms={availableRoomList}
           selectedRoomId={selectedRoomId}
-          onSelectRoom={setSelectedRoomId}
+          onSelect={setSelectedRoomId}
           onBook={handleBook}
           isBooking={createMutation.isPending}
         />

@@ -1,5 +1,5 @@
 import { queryOptions, useQuery } from '@tanstack/react-query';
-import { getReservations } from 'pages/remotes';
+import { getReservations } from 'apis/remotes';
 
 export const reservationKeys = {
   all: () => ['reservation'],

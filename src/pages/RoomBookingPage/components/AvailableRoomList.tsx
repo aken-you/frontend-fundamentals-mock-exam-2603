@@ -7,7 +7,7 @@ import { EQUIPMENT_LABELS } from 'constants/room';
 interface AvailableRoomListProps {
   availableRooms: Room[];
   selectedRoomId: string | null;
-  onSelectRoom: (id: string) => void;
+  onSelect: (id: string) => void;
   onBook: () => void;
   isBooking: boolean;
 }
@@ -15,7 +15,7 @@ interface AvailableRoomListProps {
 export function AvailableRoomList({
   availableRooms,
   selectedRoomId,
-  onSelectRoom,
+  onSelect,
   onBook,
   isBooking,
 }: AvailableRoomListProps) {
@@ -67,7 +67,7 @@ export function AvailableRoomList({
             return (
               <div
                 key={room.id}
-                onClick={() => onSelectRoom(room.id)}
+                onClick={() => onSelect(room.id)}
                 role="button"
                 aria-pressed={isSelected}
                 aria-label={room.name}
