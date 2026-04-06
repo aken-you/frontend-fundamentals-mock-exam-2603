@@ -1,5 +1,5 @@
-import { queryOptions, useQuery } from '@tanstack/react-query';
-import { getReservations } from 'apis/remotes';
+import { queryOptions } from '@tanstack/react-query';
+import { getReservations } from './remotes';
 
 export const reservationKeys = {
   all: () => ['reservation'],
@@ -11,8 +11,4 @@ export const reservationKeys = {
       queryFn: () => getReservations(date),
       enabled: !!date,
     }),
-};
-
-export const useGetReservationList = (date: string) => {
-  return useQuery(reservationKeys.list(date));
 };

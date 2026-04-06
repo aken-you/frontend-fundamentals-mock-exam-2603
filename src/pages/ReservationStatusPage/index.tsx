@@ -1,16 +1,17 @@
 import { css } from '@emotion/react';
-import { useEffect, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Top, Spacing, Border, Button, Text } from '_tosslib/components';
 import { colors } from '_tosslib/constants/colors';
 import { DatePicker } from 'components/common/DatePicker';
 import { Timeline } from './components/Timeline';
 import { MyReservationList } from './components/MyReservationList';
-import { useGetRoomList } from 'apis/room';
-import { useGetReservationList } from 'apis/reservation';
 import { useMessage } from 'hooks/useMessage';
 import { formatDate } from 'utils/format';
 import { Message } from 'components/Message';
+import { useQuery } from '@tanstack/react-query';
+import { reservationKeys } from 'apis/reservation.keys';
+import { roomKeys } from 'apis/room.keys';
 
 export function ReservationStatusPage() {
   const navigate = useNavigate();
@@ -27,8 +28,8 @@ export function ReservationStatusPage() {
   }, [locationState]);
 
   const [date, setDate] = useState(formatDate(new Date()));
-  const { data: roomList = [] } = useGetRoomList();
-  const { data: reservationList = [] } = useGetReservationList(date);
+  const { data: roomList = [] } = useQuery(roomKeys.lists());
+  const { data: reservationList = [] } = useQuery(reservationKeys.list(date));
 
   return (
     <section
@@ -103,10 +104,12 @@ export function ReservationStatusPage() {
       )}
 
       {/* 내 예약 목록 */}
-      <MyReservationList
-        onCancelSuccess={() => setMessage({ type: 'success', text: '예약이 취소되었습니다.' })}
-        onCancelError={() => setMessage({ type: 'error', text: '취소에 실패했습니다.' })}
-      />
+      <Suspense fallback={<MyReservationList.Loading />}>
+        <MyReservationList
+          onCancelSuccess={() => setMessage({ type: 'success', text: '예약이 취소되었습니다.' })}
+          onCancelError={() => setMessage({ type: 'error', text: '취소에 실패했습니다.' })}
+        />
+      </Suspense>
 
       <Spacing size={24} />
       <Border size={8} />

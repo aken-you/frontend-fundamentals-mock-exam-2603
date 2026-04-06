@@ -4,15 +4,16 @@ import { useNavigate } from 'react-router-dom';
 import { Top, Spacing, Border, Text } from '_tosslib/components';
 import { colors } from '_tosslib/constants/colors';
 import axios from 'axios';
-import { useGetRoomList } from 'apis/room';
-import { useGetReservationList } from 'apis/reservation';
-import { useCreateReservation } from 'apis/myReservation';
+import { useCreateReservation } from 'apis/myReservation.mutation';
 import { BookingFilters } from './components/BookingFilters';
 import { AvailableRoomList } from './components/AvailableRoomList';
 import { useBookingFilters } from './hooks/useBookingFilters';
 import { filterAvailableRoom } from 'utils/room';
 import { useMessage } from 'hooks/useMessage';
 import { Message } from 'components/Message';
+import { roomKeys } from 'apis/room.keys';
+import { useQuery } from '@tanstack/react-query';
+import { reservationKeys } from 'apis/reservation.keys';
 
 export function RoomBookingPage() {
   const navigate = useNavigate();
@@ -23,8 +24,8 @@ export function RoomBookingPage() {
 
   const [message, setMessage] = useMessage();
 
-  const { data: roomList = [] } = useGetRoomList();
-  const { data: reservationList = [] } = useGetReservationList(filters.date);
+  const { data: roomList = [] } = useQuery(roomKeys.lists());
+  const { data: reservationList = [] } = useQuery(reservationKeys.list(filters.date));
 
   const createMutation = useCreateReservation();
 

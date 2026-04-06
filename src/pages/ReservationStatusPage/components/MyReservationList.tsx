@@ -2,9 +2,11 @@ import { css } from '@emotion/react';
 import { Spacing, Button, Text, ListRow } from '_tosslib/components';
 import { colors } from '_tosslib/constants/colors';
 import { EQUIPMENT_LABELS } from 'constants/room';
-import { useCancelReservation, useGetMyReservationList } from 'apis/myReservation';
-import { useGetRoomList } from 'apis/room';
+import { useCancelReservation } from 'apis/myReservation.mutation';
 import { getRoomName } from 'utils/room';
+import { useQuery, useSuspenseQuery } from '@tanstack/react-query';
+import { myReservationKeys } from 'apis/myReservation.keys';
+import { roomKeys } from 'apis/room.keys';
 
 interface MyReservationsProps {
   onCancelSuccess: () => void;
@@ -12,8 +14,8 @@ interface MyReservationsProps {
 }
 
 export function MyReservationList({ onCancelSuccess, onCancelError }: MyReservationsProps) {
-  const { data: reservations = [] } = useGetMyReservationList();
-  const { data: roomList = [] } = useGetRoomList();
+  const { data: reservations = [] } = useSuspenseQuery(myReservationKeys.lists());
+  const { data: roomList = [] } = useSuspenseQuery(roomKeys.lists());
   const cancelMutation = useCancelReservation();
 
   const handleCancel = async (id: string) => {
@@ -114,3 +116,5 @@ export function MyReservationList({ onCancelSuccess, onCancelError }: MyReservat
     </section>
   );
 }
+
+MyReservationList.Loading = () => <div>loading...</div>;

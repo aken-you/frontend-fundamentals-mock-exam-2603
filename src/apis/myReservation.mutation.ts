@@ -1,20 +1,7 @@
-import { useQuery, useMutation, useQueryClient, queryOptions } from '@tanstack/react-query';
-import { getMyReservations, cancelReservation, createReservation } from 'apis/remotes';
-import { reservationKeys } from './reservation';
-
-export const myReservationKeys = {
-  all: () => ['myReservation'],
-
-  lists: () =>
-    queryOptions({
-      queryKey: [...myReservationKeys.all(), 'list'],
-      queryFn: getMyReservations,
-    }),
-};
-
-export const useGetMyReservationList = () => {
-  return useQuery(myReservationKeys.lists());
-};
+import { useMutation, useQueryClient, queryOptions } from '@tanstack/react-query';
+import { cancelReservation, createReservation } from 'apis/remotes';
+import { myReservationKeys } from './myReservation.keys';
+import { reservationKeys } from './reservation.keys';
 
 export const useCreateReservation = () => {
   const queryClient = useQueryClient();
