@@ -1,18 +1,17 @@
 import { css } from '@emotion/react';
 import { Spacing, Button, Text, ListRow } from '_tosslib/components';
 import { colors } from '_tosslib/constants/colors';
-import { Reservation } from '_tosslib/server/types';
 import { EQUIPMENT_LABELS } from 'constants/room';
 import { useCancelReservation, useGetMyReservationList } from 'hooks/apis/myReservation';
 import { useGetRoomList } from 'hooks/apis/room';
-import { MessageState } from 'hooks/useMessage';
 import { getRoomName } from 'utils/room';
 
 interface MyReservationsProps {
-  onMessage: (message: MessageState | null) => void;
+  onCancelSuccess: () => void;
+  onCancelError: () => void;
 }
 
-export function MyReservationList({ onMessage }: MyReservationsProps) {
+export function MyReservationList({ onCancelSuccess, onCancelError }: MyReservationsProps) {
   const { data: reservations = [] } = useGetMyReservationList();
   const { data: roomList = [] } = useGetRoomList();
   const cancelMutation = useCancelReservation();
@@ -20,9 +19,9 @@ export function MyReservationList({ onMessage }: MyReservationsProps) {
   const handleCancel = async (id: string) => {
     try {
       await cancelMutation.mutateAsync(id);
-      onMessage({ type: 'success', text: '예약이 취소되었습니다.' });
+      onCancelSuccess();
     } catch {
-      onMessage({ type: 'error', text: '취소에 실패했습니다.' });
+      onCancelError();
     }
   };
 

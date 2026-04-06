@@ -103,7 +103,10 @@ export function ReservationStatusPage() {
       )}
 
       {/* 내 예약 목록 */}
-      <MyReservationList onMessage={setMessage} />
+      <MyReservationList
+        onCancelSuccess={() => setMessage({ type: 'success', text: '예약이 취소되었습니다.' })}
+        onCancelError={() => setMessage({ type: 'error', text: '취소에 실패했습니다.' })}
+      />
 
       <Spacing size={24} />
       <Border size={8} />
