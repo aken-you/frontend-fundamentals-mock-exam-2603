@@ -192,7 +192,7 @@ export function RoomBookingPage() {
           selectedRoomId={selectedRoomId}
           onSelectRoom={setSelectedRoomId}
           onBook={handleBook}
-          isBooking={createMutation.isLoading}
+          isBooking={createMutation.isPending}
         />
       )}
 
